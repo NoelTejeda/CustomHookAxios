@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useEffect, useReducer } from "react"
 
-export default function useAxiosFetch(url) {
+export default function useAxiosFetch(url, trigger) {
 
   const [state, dispatch] = useReducer((state, action) => {
     switch (action.type) {
@@ -34,7 +34,7 @@ export default function useAxiosFetch(url) {
 
 
   useEffect(() => {
-    if (!url) {
+    if (!url || !trigger) {
       return
     }
     const fetch = async () => {
@@ -47,7 +47,7 @@ export default function useAxiosFetch(url) {
       }
     }
     fetch(url)
-  }, [url])
+  }, [url, trigger])
   return state
 
 }

@@ -1,11 +1,18 @@
-import './App.css'
-import useAxiosFetch from './useAxiosFetch'
+import { useState } from 'react';
+import useAxiosFetch from './useAxiosFetch';
+
 function App() {
-  const urlApi = 'http://localhost/api/users/500002874'
-  const { isLoading, isError, data } = useAxiosFetch(urlApi)
+  const urlApi = 'http://localhost/api/users/500002874';
+  const [triggerFetch, setTriggerFetch] = useState(false);
+  const { isLoading, isError, data } = useAxiosFetch(urlApi, triggerFetch);
+
+  const handleClick = () => {
+    setTriggerFetch(!triggerFetch);
+  };
 
   return (
     <>
+      <button onClick={handleClick}>Fetch Data</button>
       {isLoading ? <h2>Loading...</h2> : null}
       {isError ? <h2>Error!...</h2> : null}
       {data ? (
@@ -17,7 +24,7 @@ function App() {
         </>
       ) : null}
     </>
-  )
+  );
 }
 
-export default App
+export default App;
