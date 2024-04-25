@@ -1,13 +1,16 @@
 import { useState } from 'react';
-import useAxiosFetch from './useAxiosFetch';
+import useAxios from './useAxios';
 
 function App() {
   const urlApi = 'http://localhost/api/users/500002874';
-  const [triggerFetch, setTriggerFetch] = useState(false);
-  const { isLoading, isError, data } = useAxiosFetch(urlApi, triggerFetch);
+  //estado para controlar cuándo se debe disparar la petición http
+  const [triggerAxios, setTriggerAxios] = useState(false);
+  //desestructuramos lo devuelto por useAxios
+  const { isLoading, isError, data } = useAxios(urlApi, triggerAxios);
 
   const handleClick = () => {
-    setTriggerFetch(!triggerFetch);
+    //se cambia el estado de triggerAxios, provocará que useAxios haga una nueva peticion.
+    setTriggerAxios(!triggerAxios);
   };
 
   return (
