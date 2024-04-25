@@ -1,0 +1,42 @@
+                          Componente App 
+
+El componente App en tu aplicación React utiliza el hook personalizado useAxios para hacer peticiones a una API. Aquí te explico paso a paso lo que sucede cuando usas este componente:
+
+1.- Estado Inicial: Al principio, tienes un botón que dice “Fetch Data”. No hay datos mostrados porque la petición aún no se ha hecho.
+
+2.- Click en el Botón: Cuando haces clic en el botón, se llama a la función handleClick.
+
+3.- Función handleClick: Esta función cambia el estado de triggerAxios de false a true o viceversa. Este cambio de estado es importante porque triggerAxios es una dependencia en el hook useEffect dentro de tu hook personalizado useAxios.
+
+4.- Ejecución de useEffect: Debido a que triggerAxios cambió, useEffect se activa. Esto inicia una nueva petición HTTP a la URL que proporcionaste (urlApi).
+
+5.- Peticiones HTTP con Axios: useAxios usa Axios para hacer una petición GET a la API. Mientras espera la respuesta, muestra “Loading…”. Si hay un error en la petición, mostrará “Error!..”.
+
+6.-Respuesta de la API: Si la API responde con éxito, los datos se almacenan en el estado data y se muestran en la pantalla. Verás el nombre, la cantidad debida, el ID de la factura y la fecha de vencimiento del pago.
+
+El trigger es simplemente un interruptor que le dice a React “Hey, algo cambió, por favor vuelve a ejecutar cualquier efecto que dependa de este valor”. En tu caso, cada vez que cambias triggerAxios, le estás diciendo a React que ejecute de nuevo la petición HTTP para obtener datos frescos.
+
+
+---------------------------------------------------------------------------
+
+                         Componente useAxios
+
+Paso 1: Inicialización Cuando el hook useAxios es utilizado por un componente, se inicializa con un estado que tiene tres propiedades: isLoading, isError, y data. Estas propiedades están inicialmente establecidas en false, false, y null respectivamente.
+
+Paso 2: useReducer El hook useReducer se utiliza para manejar el estado del proceso de la petición HTTP. Este hook espera dos argumentos: una función reductora y un estado inicial. La función reductora define cómo el estado debe cambiar en respuesta a ciertas acciones.
+
+Paso 3: Acciones del Reductor Hay tres acciones que pueden ser despachadas:
+  
+  "INIT": Pone isLoading en true y isError en false. Esto indica que la petición ha comenzado.
+
+  "SUCCESS": Pone isLoading en false, isError en false, y actualiza data con la respuesta de la petición. Esto indica que la petición fue exitosa.
+
+  "ERROR": Pone isLoading en false y isError en true. Esto indica que hubo un error en la petición.
+
+Paso 4: useEffect y la Petición HTTP El hook useEffect se ejecuta después de que el componente se renderiza. Dentro de useEffect, se define una función asíncrona llamada fetch que realiza la petición HTTP
+
+Paso 5: Condiciones para la Petición Antes de ejecutar la función fetch, se verifica si url y trigger tienen valores. Si alguno de ellos no tiene valor, la función fetch no se ejecutará.
+
+Paso 6: Realizando la Petición Si url y trigger tienen valores, se despacha la acción "INIT" y se realiza la petición HTTP con axios.get(url). Si la petición es exitosa, se despacha la acción "SUCCESS" con los datos obtenidos. Si hay un error, se despacha la acción "ERROR".
+
+Paso 7: Devolución del Estado Finalmente, el hook useAxios devuelve el estado actual (state), que contiene isLoading, isError, y data, para que el componente que lo utiliza pueda acceder a esta información y renderizarla adecuadamente.
