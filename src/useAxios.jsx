@@ -1,54 +1,50 @@
 import axios from 'axios'
 import { useEffect, useReducer } from "react"
 
-export default function useAxios(url, trigger) {
-
-  // useReducer para manejar el estado del fetch con tres posibles estados: cargando, éxito y error
+export default function useAxios(url, contractId) {
   const [state, dispatch] = useReducer((state, action) => {
     switch (action.type) {
-      case "INIT": //Inicialización antes de hacer la petición
+      case "INIT":
         return {
           ...state,
           isLoading: true,
           isError: false
         }
-      case "SUCCESS": //Acción de éxito cuando recibimos la respuesta
+      case "SUCCESS":
         return {
           ...state,
           isLoading: false,
           isError: false,
-          data: action.payload //Guardamos los datos recibidos
+          data: action.payload
         }
-      case "ERROR": //Acción de error en caso de fallo en la petición
+      case "ERROR":
         return {
           ...state,
           isLoading: false,
           isError: true
         }
-      default: //En caso de una acción desconocida, no cambiamos el estado
+      default:
     }
   }, {
-    isLoading: false, //Estado inicial de carga
-    isError: false,   // Estado inicial de error
-    data: null        // Estado inicial de los datos
+    isLoading: false,
+    isError: false,
+    data: null
   })
 
-  //useEffect se ejecuta después de cada renderizado del componente
   useEffect(() => {
-    if (!url || !trigger) {  //Si no hay URL o trigger, no hacemos nada
+    if (!url || !contractId) {
       return
     }
     const fetch = async () => {
-      dispatch({ type: 'INIT' }) //Iniciamos el estado de carga
+      dispatch({ type: 'INIT' })
       try {
-        const result = await axios.get(url) //obtenemos los datos de la URL
-        dispatch({ type: 'SUCCESS', payload: result.data }) // Si es exitoso, actualizamos el estado con los datos
+        const result = await axios.get(url)
+        dispatch({ type: 'SUCCESS', payload: result.data })
       } catch (_) {
-        dispatch({ type: 'ERROR' }) //Si hay un error, actualizamos el estado a error
+        dispatch({ type: 'ERROR' })
       }
     }
-    fetch(url)  //Llamamos a la función fetch con la URL
-  }, [url, trigger])  //useEffect se re-ejecutará si cambian la URL o el trigger
-  return state  //Devolvemos el estado actual
-
+    fetch(url)
+  }, [url, contractId])
+  return state
 }
